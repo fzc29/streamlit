@@ -1,0 +1,62 @@
+# Environment variables (IMPORTANT: Contains API keys!)
+.env
+.env.local
+.env.*.local
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# FAISS indices (large binary files - users should generate their own)
+*_faiss_index/
+*.faiss
+*.pkl
+*.index
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Logs
+*.log
+
+# Streamlit
+.streamlit/
+
+# Temporary files
+*.tmp
+*.temp
+
+# PDF files (optional - uncomment if you don't want to commit PDFs)
+# *.pdf
+

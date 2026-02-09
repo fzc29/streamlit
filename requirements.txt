@@ -1,0 +1,33 @@
+# Core web framework
+streamlit>=1.28.0
+
+# LangChain and vector stores
+langchain>=0.2.13
+langchain-core>=0.2.13
+langchain-community>=0.2.13
+langchain-text-splitters>=0.2.1
+langchain-openai>=0.1.21
+langchain-google-genai>=1.0.3
+langchain-anthropic>=0.1.24
+
+# Vector database
+faiss-cpu>=1.8.0
+
+# LLM providers
+google-generativeai>=0.8.3
+anthropic>=0.18.0
+
+# PDF processing
+PyPDF2>=3.0.1
+
+# Data processing
+pandas>=2.2.3
+numpy>=1.26.4
+
+# Machine learning and retrieval
+scikit-learn>=1.5.2
+sentence-transformers>=3.0.1
+rank-bm25>=0.2.2
+
+# Environment and utilities
+python-dotenv>=1.0.1
