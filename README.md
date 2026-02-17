@@ -1,38 +1,23 @@
-# Portfolio Analysis RAG System
-
-A Streamlit-based web application for portfolio analysis using Retrieval-Augmented Generation (RAG). This system allows you to query portfolio data, generate newsletters, and upload new documents to enhance the knowledge base.
-
-## Features
-
-- 🔍 **Query Portfolio Data**: Ask questions about portfolio performance, market context, and P&L data
-- 📰 **Generate Newsletters**: Automatically generate monthly newsletters using multi-agent analysis
-- 📤 **Upload Documents**: Add PDF documents to the knowledge base through a simple web interface
-- 🤖 **Multi-Agent System**: Uses specialized AI agents for market context, portfolio performance, risk analysis, and newsletter writing
-
-## Prerequisites
+## Computer Requirements for Set up 
 
 - Python 3.8 or higher
 - API keys for:
   - Google Gemini (for embeddings)
   - Anthropic Claude (for LLM queries)
 
-## Installation
+## Installation Process
 
 1. **Clone or navigate to the project directory:**
-   ```bash
-   cd streamlit
-   ```
 
-2. **Create a virtual environment (recommended):**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+2. **Create a virtual environment**
+   ```python -m ve_name venv```
+   - To activate venv use command: 
+      a. MAC: ```source ve_name/bin/activate```
+      b. Windows: ``` ve_name/Scripts/activate```
 
 3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+   ```pip install -r requirements.txt``` 
+   if the above doesn't work, try installing with ```python -m pip install __```
 
 4. **Set up environment variables:**
    
@@ -46,11 +31,7 @@ A Streamlit-based web application for portfolio analysis using Retrieval-Augment
    CLAUDE_TEMPERATURE=0.0
    AGENT_CONTEXT_K=30
    ```
-
-   **Getting API Keys:**
-   - **Gemini API Key**: Get it from [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - **Claude API Key**: Get it from [Anthropic Console](https://console.anthropic.com/)
-
+   
 ## Initial Setup
 
 Before running the app, you need to build the vector indices from your existing documents:
