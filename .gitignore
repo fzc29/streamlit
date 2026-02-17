@@ -17,10 +17,10 @@ __pycache__/
 .Python
 
 # FAISS indices (large binary files - users should generate their own)
-*_faiss_index/
-*.faiss
-*.pkl
-*.index
+# *_faiss_index/
+# *.faiss
+# *.pkl
+# *.index
 
 # IDE
 .vscode/
