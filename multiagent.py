@@ -17,7 +17,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_openai import OpenAIEmbeddings
 
-from embed import hybrid_search, rerank
+from embed import hybrid_search #, rerank
 
 
 # ============================================================
@@ -32,6 +32,7 @@ class BaseAgent:
         self.context_k = context_k
 
         self.model = os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-latest")
+
         self.max_tokens = int(os.getenv("CLAUDE_MAX_OUTPUT_TOKENS", "2048"))
         self.temperature = float(os.getenv("CLAUDE_TEMPERATURE", "0"))
 
@@ -77,12 +78,13 @@ class MarketContextAgent(BaseAgent):
             question,
             self.context_store,
             self.context_docs,
-            self.embedding,
+            #self.embedding,
             alpha=0.6,
             k=self.context_k,
         )
 
-        reranked = rerank(question, context)
+        # reranked = rerank(question, context)
+        reranked = context
 
         system_prompt = (
             "You are a macro market analyst. Extract key events and impacts "
@@ -120,7 +122,7 @@ class PortfolioPerformanceAgent(BaseAgent):
             f"{question} PnL attribution portfolio positions",
             self.pnl_store,
             self.pnl_docs,
-            self.embedding,
+            #self.embedding,
             alpha=0.6,
             k=self.context_k,
         )
@@ -260,7 +262,7 @@ def build_agent_system():
 
     if provider == "gemini":
         embedding = GoogleGenerativeAIEmbeddings(
-            model="models/text-embedding-004",
+            model="models/gemini-embedding-001",
             google_api_key=os.getenv("GEMINI_API_KEY"),
         )
     elif provider == "openai":

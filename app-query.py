@@ -1,13 +1,33 @@
 import streamlit as st
-from trash.query_rag import multi_stage_query
+import asyncio
 
-st.set_page_config(page_title="Portfolio AI", page_icon="📊", layout="wide")
+from multiagent import build_agent_system
+
+st.set_page_config(
+    page_title="Portfolio AI",
+    page_icon="📊",
+    layout="wide"
+)
 
 st.title("📊 Portfolio Newsletter Generator")
 
 st.markdown(
     "Generate portfolio commentary using internal research databases."
 )
+
+# -------------------------
+# Lazy initialize orchestrator
+# -------------------------
+
+@st.cache_resource
+def get_orchestrator():
+    return build_agent_system()
+
+orchestrator = get_orchestrator()
+
+# -------------------------
+# Input
+# -------------------------
 
 query = st.text_area(
     "Enter Request",
@@ -17,22 +37,32 @@ query = st.text_area(
 
 generate = st.button("Generate")
 
+# -------------------------
+# Execution
+# -------------------------
+
 if generate and query.strip():
 
-    with st.spinner("Running analysis..."):
+    with st.spinner("Running multi-agent analysis..."):
 
-        response, docs = multi_stage_query(query)
+        result = asyncio.run(
+            orchestrator.run_parallel(query)
+        )
 
     st.divider()
 
-    st.subheader("Generated Output")
-    st.markdown(response.content)
+    st.subheader("Generated Newsletter")
+    st.markdown(result["newsletter"]["newsletter"])
 
-    with st.expander("View Retrieved Sources"):
-        for i, doc in enumerate(docs):
-            st.markdown(f"**Source {i+1}**")
-            st.write(doc.page_content[:1000])
-            st.divider()
+    # Optional: show intermediate agent outputs
+    with st.expander("View Market Context Analysis"):
+        st.markdown(result["market"]["analysis"])
+
+    with st.expander("View Portfolio Performance Analysis"):
+        st.markdown(result["performance"]["analysis"])
+
+    with st.expander("View Risk Analysis"):
+        st.markdown(result["risk"]["analysis"])
 
 elif generate:
     st.warning("Please enter a request.")

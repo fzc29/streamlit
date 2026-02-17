@@ -126,6 +126,15 @@ streamlit/
    - Check file permissions
    - Verify the PDF is not corrupted
 
+5. **OMP Error**
+   - add environment variables to terminal 
+      * echo 'export KMP_DUPLICATE_LIB_OK=TRUE' >> ~/.zshrc
+      * echo 'export OMP_NUM_THREADS=1' >> ~/.zshrc
+      * source ~/.zshrc
+      - then reopen terminal to save these changes 
+   - OR ```brew install libomp``` (fixes behavior on Apple Silicon), make sure to restart terminal
+   - Usually doesn't occur on windows 
+
 ### Environment Variables
 
 If you encounter issues, verify your `.env` file has all required variables:
