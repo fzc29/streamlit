@@ -1,8 +1,8 @@
 ## Computer Requirements for Set up 
 
-- Python 3.8 or higher
+- Python 3.11 preferred (choose through python Interpreter during project setup) 
 - API keys for:
-  - Google Gemini (for embeddings)
+  - Google Gemini/OpenAI (for embeddings)
   - Anthropic Claude (for LLM queries)
 
 ## Installation Process
@@ -26,7 +26,7 @@
    GEMINI_API_KEY=your_gemini_api_key_here
    CLAUDE_API_KEY=your_claude_api_key_here
    EMBEDDING_PROVIDER=gemini
-   CLAUDE_MODEL=claude-3-5-sonnet-20241022
+   CLAUDE_MODEL=claude-3-haiku-20240307
    CLAUDE_MAX_OUTPUT_TOKENS=2048
    CLAUDE_TEMPERATURE=0.0
    AGENT_CONTEXT_K=30
@@ -37,77 +37,60 @@
 Before running the app, you need to build the vector indices from your existing documents:
 
 1. **Organize your documents:**
-   - Place PDF newsletters in an `october/` folder (or create folders like `newsletters/`, `context/`, `pnl/`)
-   - The app expects PDF files in these folders
+   - The app expects PDF files in these folders (newsletters, pnl, context) 
+   - future updates may allow other options of categories 
 
-2. **Build the vector indices (optional - run once):**
-   ```bash
-   python rag.py
-   ```
-   
-   This will process PDFs in the `october/` folder and create FAISS indices.
+2. **Build the vector indices (run once in the beginning to create [categor]_faiss_index):**
+   ```python buildindex.py```
+   This will process PDFs in the all of the folders in /data and create FAISS indices.
 
-## Running the Application
+## Testing the Application
 
-1. **Start the Streamlit app:**
-   ```bash
-   streamlit run app2.py
-   ```
+1. **Deploy locally through:**
+   ```streamlit run [interface py file]```
 
 2. **Open your browser:**
-   The app will automatically open at `http://localhost:8501`
+   The app will automatically open at `http://localhost:8501` (unless otherwise specified) 
 
 ## Usage
 
 ### Querying Portfolio Data
 
 1. Enter your query in the text area (or use the default prompt)
-2. Click "🚀 Generate Newsletter"
+2. Click "Generate Response"
 3. Wait for the multi-agent system to analyze the data
 4. View the generated newsletter and source documents
 
 ### Uploading Documents
 
-1. Click "Browse files" in the sidebar
-2. Select a PDF file
+1. Login in as Admin
+2. Select a PDF file (upload)
 3. Choose which vector store to add it to:
-   - `october`: For newsletter documents
    - `newsletters`: For newsletter examples
    - `context`: For market context documents
    - `pnl`: For P&L data
 4. Click "➕ Add Document"
-5. The document will be processed and added to the selected vector store
+5. The document will be processed and added to the selected vector store in backend 
+               (logic needs to be improved here for better organization, scalability, etc)
 
 ## Project Structure
 
 ```
 streamlit/
-├── app2.py              # Main Streamlit application
-├── query_rag.py         # RAG query interface
+├── app-query.py         # Main Streamlit application for querying for responses
+├── app-write.py         # Main Streamlit application for adding to FAISS vector DB
 ├── multiagent.py        # Multi-agent orchestration system
-├── rag.py              # Document processing and vector store management
-├── embed.py            # Hybrid search and reranking utilities
-├── requirements.txt    # Python dependencies
-├── README.md          # This file
-├── .env               # Environment variables (create this)
-└── october/           # PDF documents folder
+├── buildindex.py        # Document processing and vector store management
+├── embed.py             # Hybrid search and reranking utilities
+├── requirements.txt     # Python dependencies
+├── README.md            # This file
+├── .env                 # Environment variables (create this)
+└── data/                # PDF documents folder 
 ```
 
 ## How It Works
 
-1. **Document Processing**: PDFs are read, chunked, and embedded using Google Gemini embeddings
-2. **Vector Storage**: Documents are stored in FAISS vector databases for fast similarity search
-3. **Query Processing**: When you submit a query:
-   - **Market Context Agent**: Analyzes macro market drivers
-   - **Portfolio Performance Agent**: Identifies top contributors/detractors
-   - **Risk Analyst Agent**: Performs scenario analysis
-   - **Newsletter Writer Agent**: Synthesizes everything into a newsletter
-4. **Hybrid Search**: Combines dense (FAISS) and sparse (BM25) retrieval for better results
-5. **Reranking**: Uses cross-encoder models to rerank results by relevance
-
-## Troubleshooting
-
-### Common Issues
+## Troubleshooting Common Issues
 
 1. **"FAISS index not found" error:**
    - Run `python rag.py` to build the initial indices
@@ -119,7 +102,7 @@ streamlit/
 
 3. **Import errors:**
    - Make sure all dependencies are installed: `pip install -r requirements.txt`
-   - Check that you're using the correct Python version (3.8+)
+   - Check that you're using the correct Python version
 
 4. **File upload not working:**
    - Ensure the target folder exists (e.g., `october/`, `newsletters/`, etc.)
@@ -147,30 +130,18 @@ If you encounter issues, verify your `.env` file has all required variables:
 
 ### Testing Individual Components
 
-- **Test RAG processing:**
-  ```bash
-  python rag.py
-  ```
+- **Test Backend Alone multi-agent system:**
+   - focus on multiagent.py for main process -> ```python multiagent.py```
+   - embedding techniques stored in embed.py 
 
-- **Test multi-agent system:**
-  ```bash
-  python multiagent.py
-  ```
+- **Testing both interfaces simultaneously**
+   - ```streamlit run app-query.py --server.port 8501```
+   - ```streamlit run app-write.py --server.port 8502```
 
-### Adding New Features
 
-- Modify `app2.py` for UI changes
-- Modify `multiagent.py` for agent logic
-- Modify `rag.py` for document processing
-- Modify `embed.py` for search/retrieval improvements
+## Other Resources
 
-## License
-
-This project is for demonstration purposes.
-
-## Support
-
-For issues or questions, please check:
-1. The troubleshooting section above
+1. First check troubleshooting section above
 2. API provider documentation (Gemini, Claude)
 3. Streamlit documentation: https://docs.streamlit.io/
+
