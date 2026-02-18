@@ -1,7 +1,6 @@
 """
 Multi-Agent Portfolio Analysis System (LangChain v1 Compatible)
 """
-
 import asyncio
 import os
 from datetime import datetime, timezone
