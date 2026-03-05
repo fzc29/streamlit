@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import csv
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -55,59 +56,106 @@ def get_embedding():
 
 embedding = get_embedding()
 
+
+# ============================================================
+# File Loaders
+# ============================================================
+
+def load_pdf(path: Path) -> list[Document]:
+    loader = PyPDFLoader(str(path))
+    return loader.load()
+
+def load_md(path: Path) -> list[Document]:
+    text = path.read_text(encoding="utf-8")
+    return [Document(page_content=text, metadata={"source": path.name})]
+
+def load_csv(path: Path) -> list[Document]:
+    docs = []
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for i, row in enumerate(reader):
+            content = "\n".join(f"{k}: {v}" for k, v in row.items())
+            docs.append(Document(page_content=content, metadata={"source": path.name, "row": i}))
+    return docs
+
+def load_file(path: Path) -> list[Document]:
+    ext = path.suffix.lower()
+    if ext == ".pdf":
+        return load_pdf(path)
+    elif ext == ".md":
+        return load_md(path)
+    elif ext == ".csv":
+        return load_csv(path)
+    else:
+        raise ValueError(f"Unsupported file type: {ext}")
+
 # ============================================================
 # UI
 # ============================================================
 
 st.title("📂 Upload & Index Documents")
 
-uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
+uploaded_files = st.file_uploader("Upload Doc (pdf, markdown, CSV)", 
+                                 type=["pdf", "md", "csv"], 
+                                 accept_multiple_files=True
+                                 )
 
 store_type = st.selectbox(
     "Select Knowledge Base",
-    ["context", "pnl", "newsletter"]
+    ["context", "pnl", "newsletter", "weekly_market_data"]
 )
 
-if uploaded_file and st.button("Index Document"):
+if uploaded_files and st.button("Index Document"):
+
+    BASE_DIR = Path(__file__).resolve().parent
+    index_path = BASE_DIR / f"{store_type}_faiss_index"
+
+    all_chunks = []
+    errors = []
 
     with st.spinner("Processing and embedding document..."):
 
-        # Save temp file
-        BASE_DIR = Path(__file__).resolve().parent
-        temp_path = BASE_DIR / uploaded_file.name
+        for uploaded_file in uploaded_files: 
+            temp_path = BASE_DIR / uploaded_file.name
+            try:
+                with open(temp_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
 
-        with open(temp_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
+                docs = load_file(temp_path) 
 
-        # Load PDF
-        loader = PyPDFLoader(str(temp_path))
-        docs = loader.load()
+                # Chunk
+                splitter = RecursiveCharacterTextSplitter(
+                    chunk_size=1000,
+                    chunk_overlap=200,
+                )
+                chunks = splitter.split_documents(docs)
+                all_chunks.extend(chunks)
+                st.write(f"{uploaded_file.name}` — {len(chunks)} chunks")
 
-        # Chunk
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-        )
-        chunks = splitter.split_documents(docs)
+            except Exception as e:
+                errors.append(f"{uploaded_file.name}: {str(e)}")
+                st.warning(f"Error processing {uploaded_file.name}: {str(e)}") 
 
-        # Determine index path
-        index_path = BASE_DIR / f"{store_type}_faiss_index"
+            finally:
+                if temp_path.exists():
+                    os.remove(temp_path)
 
-        if index_path.exists():
-            vectorstore = FAISS.load_local(
-                str(index_path),
-                embeddings=embedding,
-                allow_dangerous_deserialization=True,
-            )
-            vectorstore.add_documents(chunks)
-            st.info("Updated existing index.")
-        else:
-            vectorstore = FAISS.from_documents(chunks, embedding)
-            st.info("Created new index.")
+        if all_chunks:
+            if index_path.exists():
+                vectorstore = FAISS.load_local(
+                    str(index_path),
+                    embeddings=embedding,
+                    allow_dangerous_deserialization=True,
+                )
+                vectorstore.add_documents(all_chunks)
+                st.info("Updated existing index.")
+            else:
+                vectorstore = FAISS.from_documents(chunks, embedding)
+                st.info("Created new index.")
 
-        vectorstore.save_local(str(index_path))
+            vectorstore.save_local(str(index_path))
 
-        # Cleanup temp file (not storing raw PDF, just the vector embeddings)
-        os.remove(temp_path)
-
-    st.success("Document indexed successfully.")
+    if all_chunks:
+        st.success(f"Document indexed successfully! {len(all_chunks)} total chunks indexed into `{store_type}`.")
+    if errors:
+        st.error(f"Failed to process: {', '.join(errors)}")

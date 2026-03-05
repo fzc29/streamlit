@@ -129,11 +129,11 @@ class PortfolioPerformanceAgent(BaseAgent):
         system_prompt = "You are a portfolio performance analyst."
 
         user_prompt = f"""
-Question: {question}
+                        Question: {question}
 
-P&L Data:
-{''.join(doc.page_content for doc in pnl[:20])}
-"""
+                        P&L Data:
+                        {''.join(doc.page_content for doc in pnl[:20])}
+                        """
 
         analysis = self._call_claude(system_prompt, user_prompt)
 
@@ -143,7 +143,38 @@ P&L Data:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
+class WeeklyMarketDataAgent(BaseAgent):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.weekly_store = self._load_vector_store("weekly_market_data_faiss_index")
+        self.weekly_docs = self._materialize_docs(self.weekly_store)
 
+    def analyze(self, question: str) -> Dict[str, Any]:
+        results = hybrid_search(
+            question,
+            self.weekly_store,
+            self.weekly_docs,
+            alpha=0.6,
+            k=self.context_k,
+        )
+
+        system_prompt = "You are a market data analyst. Extract key weekly trends and data points strictly from the provided context."
+
+        user_prompt = f"""
+                        Question: {question}
+
+                        Weekly Market Data:
+                        {''.join(doc.page_content for doc in results[:20])}
+                        """
+
+        analysis = self._call_claude(system_prompt, user_prompt)
+
+        return {
+            "agent": "WeeklyMarketDataAgent",
+            "analysis": analysis,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    
 # ============================================================
 # Risk Agent
 # ============================================================
@@ -178,7 +209,7 @@ Provide base, upside, downside scenarios with probabilities.
 # ============================================================
 
 class NewsletterWriterAgent(BaseAgent):
-    def write(self, question, market_context, portfolio_performance, risk_analysis):
+    def write(self, question, market_context, portfolio_performance, risk_analysis, weekly_market_data=""):
         system_prompt = "You are a hedge fund newsletter writer."
 
         user_prompt = f"""
@@ -186,6 +217,9 @@ Question: {question}
 
 Market Context:
 {market_context}
+
+Weekly Market Data:
+{weekly_market_data}
 
 Portfolio Performance:
 {portfolio_performance}
@@ -215,13 +249,15 @@ class OrchestratorAgent:
         self.performance = PortfolioPerformanceAgent(embedding, anthropic_client, base_dir, context_k)
         self.risk = RiskAnalystAgent(embedding, anthropic_client, base_dir, context_k)
         self.writer = NewsletterWriterAgent(embedding, anthropic_client, base_dir, context_k)
+        self.weekly = WeeklyMarketDataAgent(embedding, anthropic_client, base_dir, context_k)
 
     async def run_parallel(self, question: str):
         market_task = asyncio.to_thread(self.market.analyze, question)
         perf_task = asyncio.to_thread(self.performance.analyze, question)
+        weekly_task = asyncio.to_thread(self.weekly.analyze, question)
 
-        market_result, perf_result = await asyncio.gather(
-            market_task, perf_task
+        market_result, perf_result, weekly_result = await asyncio.gather(
+            market_task, perf_task, weekly_task
         )
 
         risk_result = await asyncio.to_thread(
@@ -237,12 +273,14 @@ class OrchestratorAgent:
             market_result["analysis"],
             perf_result["analysis"],
             risk_result["analysis"],
+            weekly_result["analysis"],
         )
 
         return {
             "question": question,
             "market": market_result,
             "performance": perf_result,
+            "weekly": weekly_result,
             "risk": risk_result,
             "newsletter": writer_result,
             "timestamp": datetime.now(timezone.utc).isoformat(),

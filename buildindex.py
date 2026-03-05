@@ -51,10 +51,12 @@ BASE_DIR = Path(__file__).resolve().parent
 CONTEXT_DIR = BASE_DIR / "data" /"context"
 NEWSLETTER_DIR = BASE_DIR / "data" / "newsletters"
 PNL_DIR = BASE_DIR / "data" / "pnl"
+WEEKLY_MARKET_DIR = BASE_DIR / "data" / "weekly_market_data"
 
 CONTEXT_INDEX = BASE_DIR / "context_faiss_index"
 NEWSLETTER_INDEX = BASE_DIR / "newsletter_faiss_index"
 PNL_INDEX = BASE_DIR / "pnl_faiss_index"
+WEEKLY_MARKET_INDEX = BASE_DIR / "weekly_market_data_faiss_index"
 
 
 # =========================
@@ -142,5 +144,6 @@ if __name__ == "__main__":
     process_folder(CONTEXT_DIR, CONTEXT_INDEX)
     process_folder(NEWSLETTER_DIR, NEWSLETTER_INDEX)
     process_folder(PNL_DIR, PNL_INDEX)
+    process_folder(WEEKLY_MARKET_DIR, WEEKLY_MARKET_INDEX)
 
     print("\nAll FAISS indexes built successfully.")

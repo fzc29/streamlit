@@ -64,5 +64,8 @@ if generate and query.strip():
     with st.expander("View Risk Analysis"):
         st.markdown(result["risk"]["analysis"])
 
+    with st.expander("View Weekly Market Data Analysis"):
+        st.markdown(result["weekly"]["analysis"])
+
 elif generate:
     st.warning("Please enter a request.")
