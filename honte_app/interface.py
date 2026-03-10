@@ -13,12 +13,16 @@ st.set_page_config(
 
 st.markdown("""
     <style>
+        header[data-testid="stHeader"] {
+            display: none !important;
+        }
+ 
         .navbar {
             display: flex;
             align-items: center;
             background-color: #f5f0e8;
             padding: 14px 32px;
-            margin: -60px -60px 32px -60px;
+            margin: -60px -4rem 20px -4rem;
             border-bottom: 1px solid #ddd5c4;
             gap: 32px;
         }
