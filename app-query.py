@@ -246,10 +246,10 @@ if generate and query.strip():
 
     with st.spinner("Running multi-agent analysis..."):
 
-        # result = asyncio.run(
-        #     orchestrator.run_parallel(query)
-        # )
-        result = asyncio.run(run_with_wayfound(query))
+        result = asyncio.run(
+            orchestrator.run_parallel(query)
+        )
+        # result = asyncio.run(run_with_wayfound(query))
 
     st.divider()
 
