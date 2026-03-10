@@ -128,6 +128,12 @@ st.markdown("""
         padding: 0.55rem 2.2rem !important;
         transition: background-color 0.2s !important;
     }
+            
+    .stButton > button:disabled {
+        background-color: #2c2c2c !important;
+        color: #f5f0e8 !important;
+        opacity: 0.6 !important;
+    }
 
     .stButton > button:hover { background-color: #4a4a4a !important; }
 
@@ -200,7 +206,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("📊 Portfolio Newsletter Generator")
+st.title("Portfolio Newsletter Generator")
 
 st.markdown(
     "Generate portfolio commentary using internal research databases."
