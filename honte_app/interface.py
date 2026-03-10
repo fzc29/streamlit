@@ -4,7 +4,7 @@ from alex_agent import build_agent
 st.set_page_config(
     page_title="HonTe",
     page_icon="",
-    layout="centered"
+    layout="wide"
 )
 
 # -------------------------
