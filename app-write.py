@@ -300,7 +300,7 @@ def load_file(path: Path) -> list[Document]:
 # UI
 # ============================================================
 
-st.title("📂 Upload & Index Documents")
+st.title("Upload & Index Documents")
 
 uploaded_files = st.file_uploader("Upload Doc (pdf, markdown, CSV)", 
                                  type=["pdf", "md", "csv"], 
