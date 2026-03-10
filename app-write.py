@@ -16,7 +16,7 @@ load_dotenv()
 
 st.set_page_config(
     page_title="RAG Admin",
-    page_icon="📂",
+    page_icon=None,
     layout="wide"
 )
 
@@ -236,7 +236,7 @@ ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 password = st.text_input("Admin Password", type="password")
 
 if password != ADMIN_PASSWORD:
-    st.stop()
+    st.stop() 
 
 # ============================================================
 # Embedding Setup (Cached)
