@@ -9,6 +9,47 @@ st.set_page_config(
     layout="wide"
 )
 
+# -------------------------
+# Top Navigation Bar
+# -------------------------
+
+st.markdown("""
+    <style>
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #0f1117;
+            padding: 10px 24px;
+            margin: -60px -60px 20px -60px;
+            border-bottom: 1px solid #2e2e2e;
+            gap: 32px;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            margin-right: auto;
+        }
+        .navbar a {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .navbar a:hover {
+            color: white;
+        }
+    </style>
+
+    <div class="navbar">
+        <span class="navbar-brand">Navigation</span>
+        <a href="https://honte-search-app.streamlit.app/" target="_blank">Search</a>
+    </div>
+""", unsafe_allow_html=True)
+
+
 st.title("📊 Portfolio Newsletter Generator")
 
 st.markdown(
