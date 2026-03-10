@@ -16,30 +16,38 @@ st.markdown("""
         .navbar {
             display: flex;
             align-items: center;
-            background-color: #0f1117;
-            padding: 10px 24px;
-            margin: -60px -60px 20px -60px;
-            border-bottom: 1px solid #2e2e2e;
+            background-color: #f5f0e8;
+            padding: 14px 32px;
+            margin: -60px -60px 32px -60px;
+            border-bottom: 1px solid #ddd5c4;
             gap: 32px;
         }
         .navbar-brand {
-            font-weight: 700;
-            font-size: 16px;
-            color: white;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 17px;
+            color: #2c2c2c;
             text-decoration: none;
             margin-right: auto;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
         .navbar a {
-            color: #a0a0a0;
+            font-family: 'Cormorant Garamond', serif;
+            color: #7a6e60;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
             transition: color 0.2s;
         }
         .navbar a:hover {
-            color: white;
+            color: #2c2c2c;
         }
     </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 
     <div class="navbar">
         <span class="navbar-brand">Navigation</span>
@@ -53,73 +61,120 @@ st.markdown("""
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap');
 
     html, body, [class*="css"] {
-        font-family: 'Source Sans 3', sans-serif;
+        font-family: 'Jost', sans-serif;
+        background-color: #ffffff;
+        color: #2c2c2c;
     }
 
     .main {
-        background-color: #0f0f0f;
-        color: #e8e2d9;
+        background-color: #ffffff;
     }
 
     h1, h2, h3 {
-        font-family: 'Playfair Display', serif !important;
-        color: #e8e2d9 !important;
+        font-family: 'Cormorant Garamond', serif !important;
+        color: #1a1a1a !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em !important;
     }
 
+    /* Caption / subtitle */
+    .stCaption {
+        color: #9a8f82 !important;
+        font-family: 'Jost', sans-serif !important;
+        font-weight: 300 !important;
+        font-size: 14px !important;
+        letter-spacing: 0.03em !important;
+    }
+
+    /* Text area */
     .stTextArea textarea {
-        background-color: #1a1a1a !important;
-        color: #e8e2d9 !important;
-        border: 1px solid #333 !important;
-        font-family: 'Source Sans 3', sans-serif !important;
+        background-color: #faf8f5 !important;
+        color: #2c2c2c !important;
+        border: 1px solid #ddd5c4 !important;
+        border-radius: 2px !important;
+        font-family: 'Jost', sans-serif !important;
         font-size: 15px !important;
+        font-weight: 300 !important;
+        box-shadow: none !important;
     }
 
+    .stTextArea textarea:focus {
+        border-color: #b8a99a !important;
+        box-shadow: 0 0 0 1px #b8a99a !important;
+    }
+
+    /* Button */
     .stButton > button {
-        background-color: #c9a84c !important;
-        color: #0f0f0f !important;
-        font-family: 'Source Sans 3', sans-serif !important;
-        font-weight: 500 !important;
+        background-color: #2c2c2c !important;
+        color: #f5f0e8 !important;
+        font-family: 'Jost', sans-serif !important;
+        font-weight: 400 !important;
+        font-size: 13px !important;
+        letter-spacing: 0.1em !important;
+        text-transform: uppercase !important;
         border: none !important;
-        padding: 0.5rem 2rem !important;
-        letter-spacing: 0.05em !important;
+        border-radius: 1px !important;
+        padding: 0.55rem 2.2rem !important;
+        transition: background-color 0.2s !important;
     }
 
     .stButton > button:hover {
-        background-color: #e0bc6a !important;
+        background-color: #4a4a4a !important;
     }
 
+    /* Answer block */
     .answer-block {
-        background-color: #1a1a1a;
-        border-left: 3px solid #c9a84c;
-        padding: 1.5rem 2rem;
+        background-color: #faf8f5;
+        border-left: 2px solid #c9a87a;
+        padding: 2rem 2.5rem;
         margin-top: 1.5rem;
-        border-radius: 2px;
+        border-radius: 0;
         font-size: 16px;
-        line-height: 1.8;
-        color: #e8e2d9;
+        line-height: 1.9;
+        color: #2c2c2c;
+        font-family: 'Jost', sans-serif;
+        font-weight: 300;
     }
 
+    /* Source tags */
     .source-tag {
         display: inline-block;
-        background-color: #222;
-        color: #888;
+        background-color: #f5f0e8;
+        color: #7a6e60;
         font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 2px;
-        margin: 2px;
-        font-family: monospace;
+        padding: 3px 10px;
+        border-radius: 1px;
+        margin: 3px;
+        font-family: 'Jost', monospace;
+        letter-spacing: 0.04em;
+        border: 1px solid #e0d8cc;
     }
 
+    /* Divider */
     .divider {
         border: none;
-        border-top: 1px solid #2a2a2a;
+        border-top: 1px solid #e8e2d9;
         margin: 2rem 0;
+    }
+
+    /* Warning */
+    .stAlert {
+        background-color: #faf8f5 !important;
+        border: 1px solid #ddd5c4 !important;
+        color: #7a6e60 !important;
+        border-radius: 1px !important;
+    }
+
+    /* Spinner */
+    .stSpinner > div {
+        border-top-color: #c9a87a !important;
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ============================================================
 # Load Agent
