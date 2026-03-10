@@ -129,6 +129,10 @@ st.markdown("""
         transition: background-color 0.2s !important;
     }
             
+    .stButton > button p {
+        color: #f5f0e8 !important;
+    }
+            
     .stButton > button:disabled {
         background-color: #2c2c2c !important;
         color: #f5f0e8 !important;
